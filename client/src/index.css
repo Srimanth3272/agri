@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply antialiased text-forest-950 bg-forest-50;
+  }
+}
+
+/* Custom Utilities for Glassmorphism & Animations */
+@layer utilities {
+  .glass {
+    @apply bg-white bg-opacity-70 backdrop-blur-md border border-white border-opacity-20 shadow-lg;
+  }
+  
+  .glass-dark {
+    @apply bg-forest-900 bg-opacity-80 backdrop-blur-md border border-forest-800 shadow-xl text-white;
+  }
+}
