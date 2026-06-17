@@ -19,7 +19,7 @@ const Cart = () => {
     });
     text += `%0A*Estimated Subtotal:* $${subtotal.toLocaleString()}%0A%0APlease provide a formal quote including shipping.`;
     
-    window.open(`https://wa.me/+919876543210?text=${text}`, '_blank');
+    window.open(`https://wa.me/+919347405899?text=${text}`, '_blank');
   };
 
   return (

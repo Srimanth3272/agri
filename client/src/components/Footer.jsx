@@ -53,9 +53,12 @@ const Footer = () => {
               <MapPin className="text-gold-500 shrink-0 mt-1" size={18} />
               <span>123 Trade Center, Global Business Park, Agri City, AC 12345</span>
             </li>
-            <li className="flex items-center gap-3">
-              <Phone className="text-gold-500 shrink-0" size={18} />
-              <span>+91 98765 43210</span>
+            <li className="flex items-start gap-3">
+              <Phone className="text-gold-500 shrink-0 mt-1" size={18} />
+              <div>
+                <span className="block mb-1">+91 93474 05899 (WhatsApp)</span>
+                <span className="block">+1 (937) 200 1529 (Voice Agent)</span>
+              </div>
             </li>
             <li className="flex items-center gap-3">
               <Mail className="text-gold-500 shrink-0" size={18} />

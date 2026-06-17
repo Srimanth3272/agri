@@ -21,7 +21,7 @@ const ProductDetail = () => {
     e.preventDefault();
     const { name, phone, email, quantity, country, message } = formData;
     const text = `🌾 *New AgriNexa Order Inquiry*%0A%0A*Product:* ${product.name}%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Email:* ${email}%0A*Quantity:* ${quantity} MT%0A*Delivery to:* ${country}%0A*Message:* ${message}`;
-    window.open(`https://wa.me/+919876543210?text=${text}`, '_blank');
+    window.open(`https://wa.me/+919347405899?text=${text}`, '_blank');
   };
 
   return (
