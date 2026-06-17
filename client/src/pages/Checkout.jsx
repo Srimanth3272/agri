@@ -15,15 +15,29 @@ const Checkout = () => {
     setStep(step + 1);
   };
 
-  const submitOrder = async () => {
-    // In a real app, this would be an API call to the backend
-    /* 
-    await fetch('/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, cartItems })
-    });
-    */
+  const submitOrder = (e) => {
+    e.preventDefault();
+    
+    // Format the order details for WhatsApp
+    let text = `🛍️ *New AgriNexa Order Submitted!*%0A%0A`;
+    text += `*Customer Details:*%0A`;
+    text += `- Name: ${formData.name}%0A`;
+    text += `- Email: ${formData.email}%0A`;
+    text += `- Company: ${formData.company || 'N/A'}%0A`;
+    text += `- Delivery Address: ${formData.address}%0A`;
+    text += `- Country: ${formData.country}%0A%0A`;
+    
+    text += `*Payment Method:* `;
+    if (formData.paymentMethod === 'bank_transfer') text += `Direct Bank Transfer (T/T)%0A`;
+    if (formData.paymentMethod === 'lc') text += `Letter of Credit (L/C)%0A`;
+    if (formData.paymentMethod === 'advance') text += `Advance Payment%0A`;
+    
+    text += `%0APlease review the details and confirm the order.`;
+    
+    // Open WhatsApp
+    window.open(`https://wa.me/+919347405899?text=${text}`, '_blank');
+    
+    // Show confirmation screen
     setStep(3);
   };
 
