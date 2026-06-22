@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { mockProducts } from '../utils/data';
 import { Search, Filter } from 'lucide-react';
 
 const Products = () => {
@@ -10,7 +9,25 @@ const Products = () => {
 
   const categories = ['All', 'Grains', 'Spices', 'Pulses', 'Fruits', 'Vegetables', 'Oilseeds'];
 
-  const filteredProducts = mockProducts.filter(p => {
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        setProducts(data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = products.filter(p => {
     const matchesCategory = selectedCategory === 'All' || p.category === selectedCategory;
     const matchesSearch = p.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
@@ -86,7 +103,10 @@ const Products = () => {
                   <div className="mt-auto">
                     <div className="flex justify-between items-center mb-4">
                       <div>
-                        <span className="text-xl font-bold text-forest-900">${product.price}</span>
+                        {product.internationalPrice && (
+                           <span className="text-sm line-through text-forest-400 mr-2">₹{product.internationalPrice.toLocaleString()}</span>
+                        )}
+                        <span className="text-xl font-bold text-forest-900">₹{product.price.toLocaleString()}</span>
                         <span className="text-xs text-forest-500 block">{product.unit}</span>
                       </div>
                       <div className="text-right">
@@ -104,12 +124,16 @@ const Products = () => {
             ))}
           </div>
 
-          {filteredProducts.length === 0 && (
+          {loading ? (
+            <div className="text-center py-20">
+              <h3 className="text-2xl font-bold text-forest-900 mb-2">Loading products...</h3>
+            </div>
+          ) : filteredProducts.length === 0 ? (
             <div className="text-center py-20">
               <h3 className="text-2xl font-bold text-forest-900 mb-2">No products found</h3>
               <p className="text-forest-600">Try adjusting your search or filters.</p>
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>

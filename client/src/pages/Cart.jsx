@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Trash2, ArrowRight } from 'lucide-react';
-import { mockProducts } from '../utils/data';
 
 const Cart = () => {
-  // Mock cart items based on our mock data
-  const cartItems = [
-    { ...mockProducts[0], cartQuantity: 15 },
-    { ...mockProducts[2], cartQuantity: 20 }
-  ];
+  const [cartItems, setCartItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (data.length >= 3) {
+          setCartItems([
+            { ...data[0], cartQuantity: 15 },
+            { ...data[2], cartQuantity: 20 }
+          ]);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch products for cart", error);
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const subtotal = cartItems.reduce((acc, item) => acc + (item.price * item.cartQuantity), 0);
 
@@ -17,7 +33,7 @@ const Cart = () => {
     cartItems.forEach((item, index) => {
       text += `${index + 1}. *${item.name}* - ${item.cartQuantity} MT%0A`;
     });
-    text += `%0A*Estimated Subtotal:* $${subtotal.toLocaleString()}%0A%0APlease provide a formal quote including shipping.`;
+    text += `%0A*Estimated Subtotal:* ₹${subtotal.toLocaleString()}%0A%0APlease provide a formal quote including shipping.`;
     
     window.open(`https://wa.me/+919347405899?text=${text}`, '_blank');
   };
@@ -26,7 +42,9 @@ const Cart = () => {
     <div className="container mx-auto px-6 py-12">
       <h1 className="text-4xl font-heading font-bold text-forest-900 mb-8">Your Cart</h1>
 
-      {cartItems.length > 0 ? (
+      {loading ? (
+        <div className="text-center py-20 text-2xl font-bold text-forest-900">Loading cart...</div>
+      ) : cartItems.length > 0 ? (
         <div className="flex flex-col lg:flex-row gap-12">
           {/* Cart Items */}
           <div className="lg:w-2/3">
@@ -51,7 +69,7 @@ const Cart = () => {
                           <div className="text-xs text-forest-500 uppercase">{item.category}</div>
                         </div>
                       </td>
-                      <td className="p-4 text-forest-700">${item.price.toLocaleString()}</td>
+                      <td className="p-4 text-forest-700">₹{item.price.toLocaleString()}</td>
                       <td className="p-4">
                         <div className="flex items-center gap-2">
                           <input 
@@ -64,7 +82,7 @@ const Cart = () => {
                           <span className="text-xs text-forest-500">MT</span>
                         </div>
                       </td>
-                      <td className="p-4 font-bold text-forest-900">${(item.price * item.cartQuantity).toLocaleString()}</td>
+                      <td className="p-4 font-bold text-forest-900">₹{(item.price * item.cartQuantity).toLocaleString()}</td>
                       <td className="p-4 text-right">
                         <button className="text-red-400 hover:text-red-600 transition-colors p-2 rounded-full hover:bg-red-50">
                           <Trash2 size={20} />
@@ -89,7 +107,7 @@ const Cart = () => {
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between">
                   <span className="text-forest-200">Subtotal</span>
-                  <span className="font-bold">${subtotal.toLocaleString()}</span>
+                  <span className="font-bold">₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-forest-200">Shipping</span>
@@ -100,7 +118,7 @@ const Cart = () => {
               <div className="border-t border-forest-700 pt-4 mb-8">
                 <div className="flex justify-between items-end">
                   <span className="text-lg font-bold">Estimated Total</span>
-                  <span className="text-3xl font-bold text-gold-500">${subtotal.toLocaleString()}</span>
+                  <span className="text-3xl font-bold text-gold-500">₹{subtotal.toLocaleString()}</span>
                 </div>
                 <div className="text-xs text-forest-400 mt-2 text-right">Excluding shipping and taxes</div>
               </div>

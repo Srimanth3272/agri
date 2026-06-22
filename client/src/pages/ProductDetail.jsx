@@ -1,15 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { mockProducts } from '../utils/data';
 import { ArrowLeft, CheckCircle2, Shield, Truck, Package } from 'lucide-react';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const product = mockProducts.find(p => p.id === id);
+  const [product, setProduct] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        if (res.ok) {
+          const data = await res.json();
+          setProduct(data);
+        } else {
+          setProduct(null);
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch product", error);
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
 
   const [formData, setFormData] = useState({
     name: '', phone: '', email: '', quantity: '', country: '', message: ''
   });
+
+  if (loading) {
+    return <div className="text-center py-20 text-2xl font-bold text-forest-900">Loading product...</div>;
+  }
 
   if (!product) {
     return <div className="text-center py-20 text-2xl font-bold text-forest-900">Product not found.</div>;
@@ -47,7 +70,12 @@ const ProductDetail = () => {
           <p className="text-lg text-forest-600 mb-6 leading-relaxed">{product.description}</p>
           
           <div className="flex items-end gap-4 mb-8 pb-8 border-b border-forest-100">
-            <div className="text-4xl font-bold text-forest-900">${product.price}</div>
+            <div className="flex flex-col">
+              {product.internationalPrice && (
+                 <span className="text-lg line-through text-forest-400">₹{product.internationalPrice.toLocaleString()}</span>
+              )}
+              <div className="text-4xl font-bold text-forest-900">₹{product.price.toLocaleString()}</div>
+            </div>
             <div className="text-forest-500 mb-1">{product.unit}</div>
           </div>
 

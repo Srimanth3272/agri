@@ -7,7 +7,7 @@ import connectDB from './config/db.js';
 dotenv.config();
 
 // Connect to database
-connectDB();
+await connectDB();
 
 const app = express();
 
@@ -18,10 +18,26 @@ app.use(express.json());
 // Routes
 import productRoutes from './routes/productRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import { importData } from './seeder.js';
+import Product from './models/Product.js';
 
 app.get('/', (req, res) => {
   res.send('AgriNexa API is running...');
 });
+
+// Seed DB if empty (useful for memory server)
+const seedIfEmpty = async () => {
+  try {
+    const count = await Product.countDocuments();
+    if (count === 0) {
+      console.log('Database empty. Seeding...');
+      await importData();
+    }
+  } catch (err) {
+    console.error(err);
+  }
+};
+await seedIfEmpty();
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);

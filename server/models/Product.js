@@ -5,6 +5,7 @@ const productSchema = new mongoose.Schema({
   category: { type: String, required: true },
   originCountry: { type: String, required: true },
   description: { type: String, required: true },
+  internationalPrice: { type: Number, required: true },
   price: { type: Number, required: true },
   unit: { type: String, required: true, default: 'Per Metric Ton' },
   moq: { type: Number, required: true },
