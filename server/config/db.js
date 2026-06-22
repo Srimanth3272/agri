@@ -1,17 +1,11 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-
-let mongod = null;
 
 const connectDB = async () => {
   try {
-    mongod = await MongoMemoryServer.create();
-    const uri = mongod.getUri();
-
-    const conn = await mongoose.connect(uri);
-    console.log(`MongoDB Connected (In-Memory): ${conn.connection.host}`);
+    const conn = await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/agrinexa');
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error connecting to In-Memory MongoDB: ${error.message}`);
+    console.error(`Error connecting to MongoDB: ${error.message}`);
     process.exit(1);
   }
 };
