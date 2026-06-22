@@ -6,8 +6,7 @@ import Order from './models/Order.js';
 
 dotenv.config();
 
-connectDB();
-
+// We will only call connectDB if the script is run directly.
 const products = [
   // Grains
   { name: 'Premium Basmati Rice', category: 'Grains', originCountry: 'India', description: 'Extra long grain Basmati rice.', internationalPrice: 100000, price: 90000, unit: 'Per MT', moq: 10, images: ['https://images.unsplash.com/photo-1586201375761-83865001e31c'], specs: { moisture: '12% Max', packing: '50kg Bags', shelfLife: '24 Months' }, stock: 500 },
@@ -60,10 +59,12 @@ import url from 'url';
 if (import.meta.url.startsWith('file:')) {
   const modulePath = url.fileURLToPath(import.meta.url);
   if (process.argv[1] === modulePath) {
-    if (process.argv[2] === '-d') {
-      destroyData();
-    } else {
-      importData().then(() => process.exit());
-    }
+    connectDB().then(() => {
+      if (process.argv[2] === '-d') {
+        destroyData();
+      } else {
+        importData().then(() => process.exit());
+      }
+    });
   }
 }
