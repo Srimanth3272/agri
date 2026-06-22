@@ -9,7 +9,8 @@ const Cart = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/products');
+        const API_URL = import.meta.env.VITE_API_URL || 'https://agrinexa-backend1.onrender.com';
+        const res = await fetch(`${API_URL}/api/products`);
         const data = await res.json();
         if (data.length >= 3) {
           setCartItems([

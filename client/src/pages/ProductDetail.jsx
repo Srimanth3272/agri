@@ -10,7 +10,8 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`/api/products/${id}`);
+        const API_URL = import.meta.env.VITE_API_URL || 'https://agrinexa-backend1.onrender.com';
+        const res = await fetch(`${API_URL}/api/products/${id}`);
         if (res.ok) {
           const data = await res.json();
           setProduct(data);
