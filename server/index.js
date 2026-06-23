@@ -11,17 +11,17 @@ await connectDB();
 
 const app = express();
 
-// Middleware — Allow Vercel frontend + local dev
+// Middleware — Allow Vercel frontend + local dev + ngrok
 const allowedOrigins = [
-  process.env.VERCEL_URL || '',           // e.g. https://agrinexa.vercel.app
-  'http://localhost:3000',                 // local dev
-  'http://172.16.1.62:3000',              // laptop LAN access
+  process.env.VERCEL_URL || '',                          // https://agri-flame-theta.vercel.app
+  'https://sixfold-module-sarcastic.ngrok-free.dev',    // ngrok tunnel
+  'http://localhost:3000',                               // local dev
+  'http://172.16.1.62:3000',                            // laptop LAN access
 ];
 app.use(cors({
   origin: function (origin, callback) {
-    // Allow requests with no origin (mobile apps, curl, Postman)
     if (!origin) return callback(null, true);
-    if (allowedOrigins.some(o => origin.startsWith(o))) {
+    if (allowedOrigins.some(o => o && origin.startsWith(o))) {
       return callback(null, true);
     }
     return callback(new Error('Not allowed by CORS'));

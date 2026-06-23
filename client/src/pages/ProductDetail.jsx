@@ -10,7 +10,7 @@ const ProductDetail = () => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const API_URL = import.meta.env.VITE_API_URL || 'http://agrinexa-api.duckdns.org:5000';
+        const API_URL = import.meta.env.VITE_API_URL || 'https://sixfold-module-sarcastic.ngrok-free.dev';
         const res = await fetch(`${API_URL}/api/products/${id}`);
         if (res.ok) {
           const data = await res.json();
