@@ -11,8 +11,23 @@ await connectDB();
 
 const app = express();
 
-// Middleware
-app.use(cors());
+// Middleware — Allow Vercel frontend + local dev
+const allowedOrigins = [
+  process.env.VERCEL_URL || '',           // e.g. https://agrinexa.vercel.app
+  'http://localhost:3000',                 // local dev
+  'http://172.16.1.62:3000',              // laptop LAN access
+];
+app.use(cors({
+  origin: function (origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.some(o => origin.startsWith(o))) {
+      return callback(null, true);
+    }
+    return callback(new Error('Not allowed by CORS'));
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 // Routes
