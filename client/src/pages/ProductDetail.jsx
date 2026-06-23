@@ -11,7 +11,9 @@ const ProductDetail = () => {
     const fetchProduct = async () => {
       try {
         const API_URL = import.meta.env.VITE_API_URL || 'https://sixfold-module-sarcastic.ngrok-free.dev';
-        const res = await fetch(`${API_URL}/api/products/${id}`);
+        const res = await fetch(`${API_URL}/api/products/${id}`, {
+          headers: { 'ngrok-skip-browser-warning': 'true' }
+        });
         if (res.ok) {
           const data = await res.json();
           setProduct(data);
